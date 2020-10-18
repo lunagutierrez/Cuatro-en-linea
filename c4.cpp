@@ -2,14 +2,15 @@
 
 
 
-int ROWS = 6;
-int COL = 7;
-bool gameOver = false;
+const int COL = 7;
+const bool gameOver = false;
 int beta;
 int alpha = 0 - beta;
 
 int difficulty;
+int filled = 0; //contador de casillas llenas
 
+typedef unsigned int tColumnas[COL];
 vector<vector<int>> board(ROWS, vector<int>(COL));
 
 void printBoard(vector<vector<int> > &b) {
@@ -39,7 +40,19 @@ void printBoard(vector<vector<int> > &b) {
 	cout << endl;
 }
 
-void move(vector<vector<int>>& board, int col, int player){
+void inicializarJuego(vector<vector<int> > board, tColumnas top){
+	//inicializa un tablero vacio
+	for (int j = 0; j < COL; j++) {
+		board[0][j] = 0;
+		top[j] = 0;
+	}
+	for (int i = 1; i< ROWS; i++)
+		for (int j = 0; j < COL; j++)
+			board[i][j] = 0;
+}
+
+
+void move(vector<vector<int> >& board, int col, int player){
   // toma el tablero, la columna y el jugador
   for (int i = 0; i < ROWS; i++) {
 		if (board[i][col] == 0) { // Lo pone en la fila disponible
@@ -48,35 +61,6 @@ void move(vector<vector<int>>& board, int col, int player){
 		}
 	}
 }
-
-int movAI(){
-  cout << "Es mi turno..." << endl;
-  //toma el tablero, el nivel de dificultad, alpha, beta y el jugador actual
-  return miniMax(board, dificculty, alpha, beta, 2)[1];
-  //retorna la columna que garantiza la mejor jugada
-}
-
-array<int, 2> miniMax(vector<vector<int> > &b, int dif, int a, int b, int player){
-//alpha es la mejor opcion para maximizar 
-//beta es la mejor opcion para el jugador a minimizar
-
-  if(dif == 0 || dif >= )
-  //si ya he analizado cada nivel del arbol o he llegado a una hoja
-    return array<int, 2>{score(b, 2), -1};
-
-  if(player == 2){ //si el jugador es el AI
-    //tendremos que maximizar sus acciones
-    array<int, 2> curr =  {score(b, 2), -1}; //dado que maximizamos necesitamos el menor valor posible
-
-  }else{// si es el usuario minimizamos las acciones
-
-  }
-}
-
-int score(vector<vector<int> > &b, int player){
-  int score = 0; //lo inicializo en 0
-}
-
 
 int movUser(){
   int mov;
@@ -98,6 +82,37 @@ int movUser(){
 	}
 	return mov;
 }
+
+int movAI(){
+  cout << "Es mi turno..." << endl;
+  //toma el tablero, el nivel de dificultad, alpha, beta y el jugador actual
+  return miniMax(board, dificculty, alpha, beta, 2)[1];
+  //retorna la columna que garantiza la mejor jugada
+}
+
+array<int, 2> miniMax(vector<vector<int>> &b, int dif, int a, int b, int player){
+//alpha es la mejor opcion para maximizar
+//beta es la mejor opcion para el jugador a minimizar
+
+  if(dif == 0 || dif >= )
+  //si ya he analizado cada nivel del arbol o he llegado a una hoja
+    return array<int, 2>{score(b, 2), -1};
+
+  if(player == 2){ //si el jugador es el AI
+    //tendremos que maximizar sus acciones
+    array<int, 2> curr =  {score(b, 2), -1}; //dado que maximizamos necesitamos el menor valor posible
+
+  }else{// si es el usuario minimizamos las acciones
+
+  }
+}
+
+int score(vector<vector<int> > &b, int player){
+  int score = 0; //lo inicializo en 0
+}
+
+
+
 
 
 void play(){

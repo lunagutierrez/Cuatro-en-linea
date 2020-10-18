@@ -7,6 +7,7 @@ using namespace std;
 #include <iostream>
 
 void printBoard(vector<vector<int>> &b); //imprime el tablero
+void inicializarJuego(vector<vector<int> > board, tColumnas top)//inicializa el juego
 void move(vector<vector<int>>&b, int col, int p); //permite hacer el movimiento para el jugador
 int moveAI(); //movimiento del computador
 int movUser(); //movimiento para el usuario y las restricciones para asegurar que lo ingresado sea valido
@@ -17,7 +18,7 @@ int value(vector<vector<int>> b,  int p); //puntaje del tablero (revisa ver, hor
 array <int, 2> miniMax(vector<vector<int> >&b , int dif, int alpha, int beta,  int p); //algoritmo minimax recursivo
 //usamos un arreglo para hacer parejas  en lugar de un vector ya que es mas
 //rapido debido a que su tamano es constante
-int foo( int favor, int contra, int nada);//le doy puntajes a las que son seguidas (preguntarle a Carlos si es verdaderamente necesario)
+int heur( int favor, int contra, int nada);//le doy puntajes a las que son seguidas (preguntarle a Carlos si es verdaderamente necesario)
 
 #endif
 
