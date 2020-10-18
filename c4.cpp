@@ -69,7 +69,7 @@ int movUser(){
     cout << "Ingrese la columna en la que desea poner su ficha: ";
     cin >> mov; //tomo como input en donde la pondra
 
-    if (mov < COL && mov <= 0)
+    if (!(0 <= mov && mov < COL)) // si no esta en el rango de columnas
       cout << "Esa no es una columna valida" << endl; //se puede hacer con un except
 
     else if (board[ROWS - 1][mov] != 0) { // En caso de que la columna ya este llena
