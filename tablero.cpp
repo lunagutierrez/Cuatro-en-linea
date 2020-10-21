@@ -34,9 +34,14 @@ public:
   int primera_vacia(int c); //Retorna el código de la primera celda vacía en una columna que no esté completamente llena
   void casillas_dis_next(); //determina las casillas en las que podrían caer la ficha del siguiente turno
   //array_vecinas(int cod); //retorna un arreglo con los valores que hay en las casillas vecinas a una casilla
-  //int evaluar_jugada(int cod, int jugador); //FUNCIÓN CLAVE - RECURSIVA: Retorna el puntaje que se obtiene al colocar una ficha en una celda
+  //int evaluar_jugada(int cod, int jugador); //FUNCIÓN CLAVE - RECURSIVA: Retorna el puntaje que se obtiene al colocar una ficha en una celda (HEURÍSTICA)
   //bool tablero_lleno(); //Determina si el tablero está completamente lleno
   //void display_tablero(); //imprime el estado actual del tablero
+  //int valorMin(); //
+  //int valorMax(); //
+  //int MiniMax(); //
+  //bool ganador(); //
+  
 };
 
 Tablero::Tablero(){ //Constructor de un tablero que contenga 42 celdas
