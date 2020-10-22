@@ -159,7 +159,7 @@ int main(){
 
 		if (player == AI){
 			cout << "Usuario gana(1)!"<<endl;
-		}elif(player == USER){
+		}else if(player == USER){
 			cout << "AI gana(2)!" <<endl;
 		}
 
