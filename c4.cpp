@@ -9,7 +9,7 @@ int alpha = 0 - beta;
 int turn;
 int USER = 1;
 int AI = 2;
-int currentp = USER;
+int player = USER;
 
 vector<vector<int> > board (ROWS, vector<int>(COL));
 
@@ -62,7 +62,6 @@ void move(vector<vector<int> >& board, int col, int player){
 		}
 	}
 }
-
 int movUser(){
   int mov;
   cout << "Es tu turno..." << endl;
@@ -83,15 +82,12 @@ int movUser(){
 	}
 	return mov;
 }
-
 bool won(vector<vector<int> > &board, int p) { //recibe tablero y jugador
-	int adjacent = 0; //contador de piezas contiguas
+	//hor
+	//ver
+	//diag
 
-	//horizontal
-	//vertical
-	//diagonales
-
-	return false; // Nnadie ha ganado
+	return false; //si no, nadie ha ganado
 }
 
 int heuristica(vector<unsigned int> v, unsigned int p) {
@@ -102,7 +98,7 @@ int heuristica(vector<unsigned int> v, unsigned int p) {
 	for (int i = 0; i < v.size(); i++) { //hago la cuenta de cuantos hay de cada uno
 		good += (v[i] == p) ? 1 : 0; //si es verdadero va sumando 1
 		bad += (v[i] == USER || v[i] == AI) ? 1 : 0;//si es verdadero va sumando 1
-		empty += (v[i] == 0) ? 1 : 0;//si es verdadero va sumando 1
+		blank += (v[i] == 0) ? 1 : 0;//si es verdadero va sumando 1
 	}
 	//bad es bad+good
 	bad -= good;
@@ -121,25 +117,6 @@ int heuristica(vector<unsigned int> v, unsigned int p) {
 	return score;
 }
 
-int ValorMax(int p){ //Recibe el jugador, y retorna la columna en la que tiene que colocar la ficha para máximizar su puntaje
-	int max = 0; //Se inicializa el puntaje máximo en cero
-	int best_move; 
-	for(int r = 0; r < ROWS; r++){ 
-		for(int c = 0; c < COL; c++){ 
-			if(board[r][c] != 0){ //primera casilla vacía de la columna c
-				vector <vector<int>> board_copy = board; //se crea una copia del tablero de juego
-				move(vector<vector<int> >& board_copy, c, p); //A esa copia se le agrega una ficha en la columna c
-				int move_val = heuristica(board_copy,p); //Entero que retorna la evaluación del movimiento
-				if(move_val > max){ //Si el valor del movimiento actual es mayor que el valor del máximo
-					max = move_val; //El máximo es el valor del movimiento actual
-					best_move = c; //El movimiento que maximiza es colocar ficha en la columna c
-				}
-			}
-		}
-	}
-	return best_move; //Retornar el movimiento que maximiza el puntaje
-}
-
 int main(){
 
 	tColumnas top;
@@ -151,25 +128,42 @@ int main(){
 	int turn = 0; //count para los turnos
 
 	while (!gameover){
-		if(turn == 0){ // Mueve el usuario en el primer turno
+		if(player == USER){ // Mueve el usuario en el primer turno
 			move(board, movUser(), 1);
 		}
-		else if (turn == 1){ // Mueve el AI
+		else if (player == AI){ // Mueve el AI
 			move(board, movUser(), 2); //cambiar movuser por movAI cuando exista el algoritmo
 		}
-		else if (turn == COL*ROWS) { // Si llego al num max de turnos
+		else if (turn == COL*ROWS){ // Si llego al num max de turnos
 			gameover = true;
-			cout <<
 		}
+
 		gameover = won(board, player); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
 
+		if(player == 1){
+			player = 2;
+		}else{
+			player = 1;
+		}
+
 		turn +=1; //voy incrementando los turnos
-		turn = turn%2;//si es par el turno le toca al usuario
+
+		//turn = turn%2;//si es par el turno le toca al usuario
 		cout << endl;
 
-		printBoard(board); //print board after move
+		printBoard(board); //imprimo el tablero tras cada mov
 	}
+	if (turn == COL*ROWS) { // Si es empate
+		cout << "Empate" << endl;
+	}else { // Si alguien gana
 
+		if (player == AI){
+			cout << "Usuario gana(1)!"<<endl;
+		}elif(player == USER){
+			cout << "AI gana(2)!" <<endl;
+		}
+
+	}
 
 	return 0;
 
