@@ -62,6 +62,7 @@ void move(vector<vector<int> >& board, int col, int player){
 		}
 	}
 }
+
 int movUser(){
   int mov;
   cout << "Es tu turno..." << endl;
@@ -82,14 +83,15 @@ int movUser(){
 	}
 	return mov;
 }
+
 bool won(vector<vector<int> > &board, int p) { //recibe tablero y jugador
 	int adjacent = 0; //contador de piezas contiguas
-	
+
 	//horizontal
 	//vertical
 	//diagonales
-	
-	return false; // Nnadie ha ganado 
+
+	return false; // Nnadie ha ganado
 }
 
 int heuristica(vector<unsigned int> v, unsigned int p) {
@@ -117,6 +119,25 @@ int heuristica(vector<unsigned int> v, unsigned int p) {
 	else if (bad == 4)
 		score -= 1000;
 	return score;
+}
+
+int ValorMax(int p){ //Recibe el jugador, y retorna la columna en la que tiene que colocar la ficha para máximizar su puntaje
+	int max = 0; //Se inicializa el puntaje máximo en cero
+	int best_move; 
+	for(int r = 0; r < ROWS; r++){ 
+		for(int c = 0; c < COL; c++){ 
+			if(board[r][c] != 0){ //primera casilla vacía de la columna c
+				vector <vector<int>> board_copy = board; //se crea una copia del tablero de juego
+				move(vector<vector<int> >& board_copy, c, p); //A esa copia se le agrega una ficha en la columna c
+				int move_val = heuristica(board_copy,p); //Entero que retorna la evaluación del movimiento
+				if(move_val > max){ //Si el valor del movimiento actual es mayor que el valor del máximo
+					max = move_val; //El máximo es el valor del movimiento actual
+					best_move = c; //El movimiento que maximiza es colocar ficha en la columna c
+				}
+			}
+		}
+	}
+	return best_move; //Retornar el movimiento que maximiza el puntaje
 }
 
 int main(){
