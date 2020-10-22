@@ -1,17 +1,19 @@
-#include "c4.hpp"
+#include <iostream>	 // consola de la libreria standard (STL)
+#include <vector>
+using namespace std;
 
-
-
-const int COL = 7;
-const bool gameOver = false;
+const int ROWS = 6, COL =7;
+bool gameOver = false;
 int beta;
 int alpha = 0 - beta;
+int turn;
+int USER = 1;
+int AI = 2;
+int currentp = USER;
 
-int difficulty;
-int filled = 0; //contador de casillas llenas
+vector<vector<int> > board (ROWS, vector<int>(COL));
 
-typedef unsigned int tColumnas[COL];
-vector<vector<int>> board(ROWS, vector<int>(COL));
+typedef unsigned int tColumnas[COL]; //siempre positivas
 
 void printBoard(vector<vector<int> > &b) {
 	for (int i = 0; i < COL; i++) {
@@ -23,13 +25,13 @@ void printBoard(vector<vector<int> > &b) {
 			cout << "|";
 			switch (b[ROWS - j - 1][k]){
 			case 0:
-				cout << " ";
+				cout << "0";
 				break; // nada
 			case 1:
-				cout << "X";
+				cout << "1";
 				break; // para un Jugador
 			case 2:
-				cout << "O";
+				cout << "2";
 				break; // Otro jugador
 			}
 			if (k + 1 == COL) { cout << "|"; }
@@ -41,7 +43,6 @@ void printBoard(vector<vector<int> > &b) {
 }
 
 void inicializarJuego(vector<vector<int> > board, tColumnas top){
-	//inicializa un tablero vacio
 	for (int j = 0; j < COL; j++) {
 		board[0][j] = 0;
 		top[j] = 0;
@@ -61,7 +62,6 @@ void move(vector<vector<int> >& board, int col, int player){
 		}
 	}
 }
-
 int movUser(){
   int mov;
   cout << "Es tu turno..." << endl;
@@ -69,7 +69,7 @@ int movUser(){
     cout << "Ingrese la columna en la que desea poner su ficha: ";
     cin >> mov; //tomo como input en donde la pondra
 
-    if (!(0 <= mov && mov < COL)) // si no esta en el rango de columnas
+    if (!(0 <= mov && mov < COL))
       cout << "Esa no es una columna valida" << endl; //se puede hacer con un except
 
     else if (board[ROWS - 1][mov] != 0) { // En caso de que la columna ya este llena
@@ -82,70 +82,74 @@ int movUser(){
 	}
 	return mov;
 }
-
-int movAI(){
-  cout << "Es mi turno..." << endl;
-  //toma el tablero, el nivel de dificultad, alpha, beta y el jugador actual
-  return miniMax(board, dificculty, alpha, beta, 2)[1];
-  //retorna la columna que garantiza la mejor jugada
+bool won(vector<vector<int> > &board, int p) { //recibe tablero y jugador
+	int adjacent = 0; //contador de piezas contiguas
+	
+	//horizontal
+	//vertical
+	//diagonales
+	
+	return false; // Nnadie ha ganado 
 }
 
-array<int, 2> miniMax(vector<vector<int>> &b, int dif, int a, int b, int player){
-//alpha es la mejor opcion para maximizar
-//beta es la mejor opcion para el jugador a minimizar
-
-  if(dif == 0 || dif >= )
-  //si ya he analizado cada nivel del arbol o he llegado a una hoja
-    return array<int, 2>{score(b, 2), -1};
-
-  if(player == 2){ //si el jugador es el AI
-    //tendremos que maximizar sus acciones
-    array<int, 2> curr =  {score(b, 2), -1}; //dado que maximizamos necesitamos el menor valor posible
-
-  }else{// si es el usuario minimizamos las acciones
-
-  }
+int heuristica(vector<unsigned int> v, unsigned int p) {
+	int score = 0;
+	unsigned int good = 0; // puntos a favor del jugador p
+	unsigned int bad = 0; // puntos a favor del jugador p
+	unsigned int blank = 0; // puntos neutros
+	for (int i = 0; i < v.size(); i++) { //hago la cuenta de cuantos hay de cada uno
+		good += (v[i] == p) ? 1 : 0; //si es verdadero va sumando 1
+		bad += (v[i] == USER || v[i] == AI) ? 1 : 0;//si es verdadero va sumando 1
+		empty += (v[i] == 0) ? 1 : 0;//si es verdadero va sumando 1
+	}
+	//bad es bad+good
+	bad -= good;
+	if (good == 4)
+		score += 1001;  //prefiere ganar que bloquear
+	else if (good == 3 && blank == 1)
+		score += 500;
+	else if (good == 2 && blank == 2)
+		score += 50;
+	else if (bad == 2 && blank == 2)
+		score -= 51;  //prefiere bloquear
+	else if (bad == 3 && blank == 1)
+		score -= 501;  //prefiere bloquear
+	else if (bad == 4)
+		score -= 1000;
+	return score;
 }
 
-int score(vector<vector<int> > &b, int player){
-  int score = 0; //lo inicializo en 0
-}
+int main(){
 
+	tColumnas top;
+	inicializarJuego(board, top);
+	printBoard(board);
 
-
-
-
-void play(){
-  cout << "Juguemos 4 en linea!" << endl;
-  cout << "Escoge el nivel de dificultad: " << endl;
-  cin >> difficulty;
-
-  printBoard(board);
-
-  bool gameover = false;//inicializador del juego
+	bool gameover = false;//inicializador del juego
   int player = 1; //jugador actual
 	int turn = 0; //count para los turnos
 
 	while (!gameover){
-    if(turn == 0){ // Mueve el usuario en el primer turno
-      move(board, movUser(), 1);
-    }
-    else if (turn == 1){ // Mueve el AI
-      move(board, movAI(), 2);
-    }
-    else if (turn == COL*ROWS) { // Si llego al num max de turnos
-      gameover = true;
-    }
-    gameover = movWin(board, player); //Revisa si el jugador gano
+		if(turn == 0){ // Mueve el usuario en el primer turno
+			move(board, movUser(), 1);
+		}
+		else if (turn == 1){ // Mueve el AI
+			move(board, movUser(), 2); //cambiar movuser por movAI cuando exista el algoritmo
+		}
+		else if (turn == COL*ROWS) { // Si llego al num max de turnos
+			gameover = true;
+			cout <<
+		}
+		gameover = won(board, player); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
 
-    turn +=1; //voy incrementando los turnos
-    turn = turn%2;//si es par el turno le toca al usuario
+		turn +=1; //voy incrementando los turnos
+		turn = turn%2;//si es par el turno le toca al usuario
 		cout << endl;
 
-		printBoard(board); // print board after successful move
+		printBoard(board); //print board after move
 	}
 
+
+	return 0;
+
 }
-
-
-//defs funcs
