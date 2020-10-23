@@ -90,6 +90,14 @@ int movAI(){
   //retorna la columna que garantiza la mejor jugada
 }
 
+
+
+bool movWin(vector<vector<int>>&b, int p){
+
+
+	
+}
+
 array<int, 2> miniMax(vector<vector<int>> &b, int dif, int a, int b, int player){
 //alpha es la mejor opcion para maximizar
 //beta es la mejor opcion para el jugador a minimizar
