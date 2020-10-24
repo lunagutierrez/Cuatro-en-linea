@@ -32,6 +32,8 @@ bool VerificarD2(int player); //verifica diagonalmente (/) si hay ganador.
 
 int heuristica(vector<int> s);
 int eval4();
+int Min(int p, int u); //Recibe el jugador cp(computer player) y el u(user) y retorna el movimiento de cp que minimiza el puntaje de u
+int Max(int p); //Recibe el jugador, y retorna la columna en la que obtendría mayor puntaje para el siguiente turno
 
 public:
 
@@ -42,6 +44,7 @@ void printBoard(); // imprimir el tablero.
 void move(int col, int player);
 int movUser();
 int moveAI();
+int MiniMax(int p, int u);
 
 bool isWinner(int player); // dice si hay ganador.
 bool won();
