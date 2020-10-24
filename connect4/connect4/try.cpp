@@ -193,6 +193,26 @@ bool Linea4::isWinner(int player){
   }
 
 }
+
+int Linea4::MiniMax(int p, int u){
+  //Función que define si es más conveniente minimizar la jugada del oponente o maximizar la propia
+  int MinMove = Min(p,u);
+  int MaxMove = Max(p);
+  int copy_board_min [][];
+  int copy_board_max [][];
+  move(copy_board_min, MinMove, p);
+  move(copy_board_max, MaxMove, p);
+  int absMinVal = abs(eval4(copy_board_min));
+  int absMaxVal = abs(eval4(copy_board_max));
+  int best_move;
+  if(absMaxVal > absMinVal){
+    best_move = MaxMove;
+  }else{
+    best_move = MinMove;
+  }
+  return best_move;
+}
+
 //==============================================================================
 // FUNCIONES PRIVADAS
 bool Linea4::VerificarV(int player){
@@ -441,4 +461,45 @@ void Linea4::play(){
 			cout << "AI gana(2)!" <<endl;
 		}
 	}
+}
+
+int Linea4::Min(int p, int u){
+  //Recibe el jugador p y el u y retorna el movimiento de p que minimiza el puntaje de u
+	int min = 0; //Se inicializa el puntaje máximo en cero
+	int best_move;
+  int move_val;
+  int copy_board [][];
+	for(int c = 0; c < COL; c++){
+    if (!isColumnFull){
+      copy_board = board;
+      move(copy_board, c, p);
+      move_val = eval4(copy_board); //Entero que retorna la evaluación del movimiento ¡MODIFICAR!
+        if(move_val < min){ //Si el valor del movimiento actual es menor que el valor del minimo
+          min = move_val; //El mínimo es el valor del movimiento actual
+					best_move = c; //El movimiento que minimiza es colocar ficha en la columna c
+        }
+      }
+	 }
+	return best_move; //Retornar el movimiento que mínimiza el puntaje del oponente
+}
+
+int Linea4::Max(int p){
+  //Recibe el jugador, y retorna la columna en la que obtendría mayor puntaje para el siguiente juego
+	int max = 0; //Se inicializa el puntaje máximo en cero
+	int best_move;
+  int move_val;
+  int copy_board [][];
+	for(int r = 0; r < ROWS; r++){
+      if (!isColumnFull){
+          copy_board = board;
+          move(copy_board, c, p);
+				  move_val = eval4(copy_board); //Entero que retorna la evaluación del movimiento ¡MODIFICAR!
+				  if(move_val > max){ //Si el valor del movimiento actual es mayor que el valor del máximo
+            max = move_val; //El máximo es el valor del movimiento actual
+					  best_move = c; //El movimiento que maximiza es colocar ficha en la columna
+          }
+        }
+	    }
+  
+	return best_move; //Retornar el movimiento que maximiza el puntaje
 }
