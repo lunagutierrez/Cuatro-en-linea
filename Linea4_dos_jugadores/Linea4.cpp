@@ -109,6 +109,7 @@ bool Linea4::isWinner(int player){
 void Linea4::play() {
   int player = 0;
   int last_play = 0;
+  printBoard();
   while(!isGameFinished()){ // el juego se realiza mientras haya espacios donde colocar fichas.
     int column_selected = -1;
     bool column_to_max = true;

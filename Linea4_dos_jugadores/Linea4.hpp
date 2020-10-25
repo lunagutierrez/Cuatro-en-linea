@@ -1,5 +1,5 @@
-#ifndef _TABLERO_HPP
-#define _TABLERO_HPP
+#ifndef _LINEA4_HPP
+#define _LINEA4_HPP
 
 #include <vector>
 const int NUM_ROWS = 6; // número de filas.
@@ -8,10 +8,8 @@ const int NUM_COLS = 7; // número de columnas.
 class Linea4{
 private:
 
-
   int board[NUM_ROWS][NUM_COLS]; //el tablero es una matriz.
   bool turno; // True para jugador 1, false para jugador 2.
-
 
   // Funciones de verificación, ya se puede acceder al tablero como atributo
   // de la clase
