@@ -1,6 +1,6 @@
 
-#ifndef _TRY_HPP
-#define _TRY_HPP
+#ifndef _CONNECT4_HPP
+#define _CONNECT4_HPP
 
 #include <vector>
 #include <cmath>
