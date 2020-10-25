@@ -1,7 +1,7 @@
 #include <iostream>	 // consola de la libreria standard (STL)
 #include <vector>
 #include<string>
-#include "try.hpp"
+#include "connect4.hpp"
 using namespace std;
 
 Linea4::Linea4(){
