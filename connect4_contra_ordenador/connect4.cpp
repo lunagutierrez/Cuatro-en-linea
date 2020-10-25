@@ -21,13 +21,13 @@ void Linea4::printBoard(){
 			cout << "|";
 			switch (board[ROWS - j - 1][k]){
 			case 0:
-				cout << "0";
+				cout << " ";
 				break; // nada
 			case 1:
-				cout << "1";
+				cout << "X";
 				break; // para un Jugador
 			case 2:
-				cout << "2";
+				cout << "O";
 				break; // Otro jugador
 			}
 			if (k + 1 == COL) { cout << "|"; }
@@ -229,11 +229,11 @@ int Linea4::MiniMax(){
 
   move(copy_board_min, MinMove, AI);
   move(copy_board_max, MaxMove, AI);
-	cout << "move minimax" << endl;
+	//cout << "move minimax" << endl;
   int absMinVal = abs(eval4(copy_board_min, USER));
-	cout <<"eval 4 min" <<eval4(copy_board_min, USER) << endl;
+	//cout <<"eval 4 min" <<eval4(copy_board_min, USER) << endl;
   int absMaxVal = abs(eval4(copy_board_max, AI));
-	cout <<"eval 4 max" <<eval4(copy_board_max, AI) << endl;
+	//cout <<"eval 4 max" <<eval4(copy_board_max, AI) << endl;
   int best_move;
   if(absMaxVal > absMinVal){
     best_move = MaxMove;
@@ -467,7 +467,7 @@ int Linea4::Min(){
         }
       }
 	 }
-	 cout << "mov que min: " << best_move<<endl;
+	// cout << "mov que min: " << best_move<<endl;
 	return best_move; //Retornar el movimiento que mínimiza el puntaje del oponente
 }
 
@@ -492,7 +492,7 @@ int Linea4::Max(){
         }
       }
 	}
-	cout << "mov que max: " << best_move<<endl;
+	//cout << "mov que max: " << best_move<<endl;
 	return best_move; //Retornar el movimiento que maximiza el puntaje
 }
 
