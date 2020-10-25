@@ -46,7 +46,6 @@ int MiniMax();
 
 bool isColumnFull(int column); // si alguna columna está llena.
 bool isWinner(int player); // dice si hay ganador.
-bool won();
 
 void play(); // para empezar el juego.
 
