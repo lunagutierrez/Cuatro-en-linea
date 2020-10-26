@@ -186,23 +186,23 @@ int Linea4::eval4(int b[ROWS][COL], int p){ //toma el estado actual del tablero 
 	return puntos;
 }
 
-bool Linea4::isWinner(int player, int b[ROWS][COL]){
+bool Linea4::isWinner(int player){
   /*
   Funcion que verifica si el jugador player ganó la partida
   Dentro la función del juego se verificará por separado jugador 1 y jugador 2
   */
   // 1. Se verifica verticalmente si hay 4 fichas alineadas
-  if(VerificarV(player, b) == true){
-    cout << "We have a winner. Player "<< player << " wins!";
+  if(VerificarV(player) == true){
+
     return true;
-  }else if(VerificarH(player, b) == true){
+  }else if(VerificarH(player) == true){
     // 2. Se verifica horizontalmente si hay 4 fichas alineadas
-    cout << "We have a winner. Player "<< player << " wins!";
+
     return true;
 
-  }else if(VerificarD(player, b) == true){
+  }else if(VerificarD(player) == true){
     // 3. Se verifica en diagonal \ si hay 4 fichas alineadas
-    cout << "We have a winner. Player "<< player << " wins!";
+
     return true;
   }else{
     //Si en ningun caso se encontro 4 en linea, se retorna false
@@ -213,59 +213,36 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
 
 int Linea4::MiniMax(){
   //Función que define si es más conveniente minimizar la jugada del oponente o maximizar la propia
-  int MinMove = Min(AI);
-  int MaxMove = Max(AI);
-  int MaxMoveUser = Max(USER);
-
-  int copy_board_min [ROWS][COL];
+  int MinMove = Min();
+  int MaxMove = Max();
+	int copy_board_min [ROWS][COL];
   int copy_board_max [ROWS][COL];
-  int copy_board_maxu [ROWS][COL];
-
 	for(int i = 0; i < ROWS; i++){
 		for(int j = 0; j <COL; j++){
 			copy_board_min[i][j] = board[i][j];
 			copy_board_max[i][j] = board[i][j];
-      copy_board_maxu[i][j] = board[i][j];
 		}
 	}
 
   move(copy_board_min, MinMove, AI);
   move(copy_board_max, MaxMove, AI);
-  move(copy_board_maxu, MaxMoveUser, USER);
-
-
-  if(isWinner(AI,copy_board_max)){
-    return MaxMove;
-  }else if(isWinner(AI,copy_board_min)){
-    return MinMove;
-  }else if(isWinner(USER, copy_board_maxu)){
-    return MaxMoveUser;
-  }else if((!isWinner(AI,copy_board_max))&&(!isWinner(AI,copy_board_min))&&(!isWinner(USER, copy_board_maxu))){
-  	//cout << "move minimax" << endl;
-    int absMinVal = abs(eval4(copy_board_min, USER));
-  	//cout <<"eval 4 min" <<eval4(copy_board_min, USER) << endl;
-    int absMaxVal = abs(eval4(copy_board_max, AI));
-  	//cout <<"eval 4 max" <<eval4(copy_board_max, AI) << endl;
-    int best_move;
-    if(absMaxVal >= absMinVal){
-      best_move = MinMove;
-    }else{
-      best_move = MaxMove;
-    }
-    return best_move;
+	//cout << "move minimax" << endl;
+  int absMinVal = abs(eval4(copy_board_min, USER));
+	//cout <<"eval 4 min" <<eval4(copy_board_min, USER) << endl;
+  int absMaxVal = abs(eval4(copy_board_max, AI));
+	//cout <<"eval 4 max" <<eval4(copy_board_max, AI) << endl;
+  int best_move;
+  if(absMaxVal >= absMinVal){
+    best_move = MinMove;
   }else{
-    for(int col = 0; col < COL; col++){
-      if(!isColumnFull(col)){
-        return col;
-        break;
-      }
-    }
+    best_move = MaxMove;
   }
+  return best_move;
 }
 
 //==============================================================================
 // FUNCIONES PRIVADAS
-bool Linea4::VerificarV(int player, int b[ROWS][COL]){
+bool Linea4::VerificarV(int player){
   // Funcion que verifica verticalmente en todas las columnas.
   // si hay  fichas 4 en linea de player.
  // el booleando que confirma si encontró el número del jugador.
@@ -274,7 +251,7 @@ bool Linea4::VerificarV(int player, int b[ROWS][COL]){
   for (int c = 0; c < COL; c++){
 		for (int r = 0; r < ROWS - 3; r++){
 			for (int i = 0; i < 4; i++){ // se necesitan 4 fichas
-				if (b[r + i][c] == player){
+				if (board[r + i][c] == player){
 					aligned++;//sumo al contador de fichas contiguas
 				}
 				if (aligned == 4){//si hay 4 en linea
@@ -288,7 +265,7 @@ bool Linea4::VerificarV(int player, int b[ROWS][COL]){
 	return false; //si no, nadie ha ganado
 }
 //------------------------------------------------------------------------------
-bool Linea4::VerificarH(int player, int b[ROWS][COL]){
+bool Linea4::VerificarH(int player){
   // Funcion que verifica horizontalmente en todas las columnas.
   // si hay  fichas 4 en linea de player.
 
@@ -297,7 +274,7 @@ bool Linea4::VerificarH(int player, int b[ROWS][COL]){
   for (int c = 0; c < COL - 3; c++){ // for cada columna sin salirnos del rango
 		for (int r = 0; r < ROWS; r++){ // for cada fila
 			for (int i = 0; i < 4; i++){ // se necesitan 4 fichas
-				if (b[r][c + i] == player){
+				if (board[r][c + i] == player){
 					aligned++; //sumo al contador de fichas contiguas
 				}
 				if (aligned == 4){//si hay 4 en linea
@@ -310,14 +287,14 @@ bool Linea4::VerificarH(int player, int b[ROWS][COL]){
   return false; //si no, nadie ha ganado
 }
 //------------------------------------------------------------------------------
-bool Linea4::VerificarD(int player, int b[ROWS][COL]){
+bool Linea4::VerificarD(int player){
   int aligned = 0;//contador de fichas contiguas del mismo jugador
   // diagonales
   	//de der a izq
 	for (int c = 0; c < COL - 3; c++){
 		for (int r = 0; r < ROWS - 3; r++){
 			for (int i = 0; i < 4; i++){// se necesitan 4 fichas
-				if (b[r + i][c + i] == player){
+				if (board[r + i][c + i] == player){
 					aligned++;//sumo al contador de fichas contiguas
 				}
 				if (aligned == 4){
@@ -332,7 +309,7 @@ bool Linea4::VerificarD(int player, int b[ROWS][COL]){
 	for (int c = 0; c < COL - 3; c++){//el -3 asegura que no me salgo del tablero
 		for (int r = 3; r < ROWS; r++){
 			for (int i = 0; i < 4; i++){// se necesitan 4 fichas
-				if (b[r - i][c + i] == player){
+				if (board[r - i][c + i] == player){
 					aligned++;//sumo al contador de fichas contiguas
 				}
 				if (aligned == 4){
@@ -347,10 +324,10 @@ bool Linea4::VerificarD(int player, int b[ROWS][COL]){
 }
 //---------------------------------------------------------------------------
 
-int Linea4::Min(int p){
+int Linea4::Min(){
   //Recibe el jugador p y el u y retorna el movimiento de p que minimiza el puntaje de u
 	int min = 0; //Se inicializa el puntaje máximo en cero
-	int best_move = 3;
+	int best_move = 3; // el mejor mov inicial es en el medio
   int move_val;
   int copy_board [ROWS][COL];
 
@@ -363,8 +340,8 @@ int Linea4::Min(int p){
     		}
 			}
 
-      move(copy_board, c, p);
-      move_val = eval4(copy_board, p); //Entero que retorna la evaluación del movimiento ¡MODIFICAR!
+      move(copy_board, c, AI);
+      move_val = eval4(copy_board, USER); //Entero que retorna la evaluación del movimiento ¡MODIFICAR!
         if(move_val < min){ //Si el valor del movimiento actual es menor que el valor del minimo
           min = move_val; //El mínimo es el valor del movimiento actual
 					best_move = c; //El movimiento que minimiza es colocar ficha en la columna c
@@ -375,10 +352,10 @@ int Linea4::Min(int p){
 	return best_move; //Retornar el movimiento que mínimiza el puntaje del oponente
 }
 
-int Linea4::Max(int p){
+int Linea4::Max(){
   //Recibe el jugador, y retorna la columna en la que obtendría mayor puntaje para el siguiente juego
 	int max = 0; //Se inicializa el puntaje máximo en cero
-	int best_move = 3;
+	int best_move = 3; // el mejor mov inicial es en el medio
   int move_val;
   int copy_board [ROWS][COL];
 	for(int c = 0; c < COL; c++){
@@ -388,8 +365,8 @@ int Linea4::Max(int p){
 						copy_board[i][j] = board[i][j];
 					}
 				}
-        move(copy_board, c, p);
-				move_val = eval4(copy_board, p); //Entero que retorna la evaluación del movimiento ¡MODIFICAR!
+        move(copy_board, c, AI);
+				move_val = eval4(copy_board, AI); //Entero que retorna la evaluación del movimiento ¡MODIFICAR!
 				if(move_val > max){ //Si el valor del movimiento actual es mayor que el valor del máximo
         	max = move_val; //El máximo es el valor del movimiento actual
 					best_move = c; //El movimiento que maximiza es colocar ficha en la columna
@@ -422,7 +399,7 @@ void Linea4::play(){
 			gameover = true;
 		}
 
-		gameover = isWinner(player, board); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
+		gameover = isWinner(player); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
 
 		if(player == 1){
 			player = 2;
@@ -442,9 +419,9 @@ void Linea4::play(){
 	}else { // Si alguien gana
 
 		if (player == AI){
-			cout << "Usuario gana(1)!"<<endl;
+			cout << "Usuario gana(X)!"<<endl;
 		}else if(player == USER){
-			cout << "AI gana(2)!" <<endl;
+			cout << "AI gana(O)!" <<endl;
 		}
 	}
 }
