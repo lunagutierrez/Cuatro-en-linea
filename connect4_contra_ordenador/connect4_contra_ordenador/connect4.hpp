@@ -13,11 +13,10 @@ private:
 int board[ROWS][COL]; //el tablero es una matriz.
 // int board[ROWS][COL]; //el tablero es una matriz.
 bool gameOver = false;
-int USER = 1;
-int AI = 2;
+const int USER = 1;
+const int AI = 2;
 int player = USER;
 int turn;
-int tColumnas[COL];
 
 // Funciones de verificación, ya se puede acceder al tablero como atributo
 // de la clase

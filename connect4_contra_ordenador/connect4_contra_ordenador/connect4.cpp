@@ -2,189 +2,189 @@
 #include <iostream>	 // consola de la libreria standard (STL)
 #include <vector>
 #include<string>
-#include "Connect4.hpp"
+#include "connect4.hpp"
 using namespace std;
 
 Linea4::Linea4(){//constructor del juego
-for(int f = 0; f < ROWS; f++){
-  for(int c = 0;c < COL; c++){
-    board[f][c] = 0; // inicializar el tablero en ceros.
+  for(int f = 0; f < ROWS; f++){
+    for(int c = 0;c < COL; c++){
+      board[f][c] = 0; // inicializar el tablero en ceros.
+    }
   }
-}
-turn = true; // inicializar el turno
+  turn = true; // inicializar el turno
 }
 
 void Linea4::printBoard(){
 
-cout << endl << ". . . . . . . ." << endl;
-for (int j = 0; j < ROWS; j++){
-  for (int k = 0; k < COL; k++){
-    cout << "|";
-    switch (board[ROWS - j - 1][k]){
-    case 0:
-      cout << " ";
-      break; // nada
-    case 1:
-      cout << "X";
-      break; // para un Jugador
-    case 2:
-      cout << "O";
-      break; // Otro jugador
+    cout << endl << ". . . . . . . ." << endl;
+    for (int j = 0; j < ROWS; j++){
+      for (int k = 0; k < COL; k++){
+        cout << "|";
+        switch (board[ROWS - j - 1][k]){
+        case 0:
+          cout << " ";
+          break; // nada
+        case 1:
+          cout << "X";
+          break; // para un Jugador
+        case 2:
+          cout << "O";
+          break; // Otro jugador
+        }
+        if (k + 1 == COL) { cout << "|"; }
+      }
+      cout << endl;
     }
-    if (k + 1 == COL) { cout << "|"; }
-  }
-  cout << endl;
-}
-cout << "---------------" << endl;
-for (int i = 0; i < COL; i++) {
-  cout << " " << i; //imprimo el numero de la casilla
-}
-cout << endl;
+    cout << "---------------" << endl;
+    for (int i = 0; i < COL; i++) {
+      cout << " " << i; //imprimo el numero de la casilla
+    }
+    cout << endl;
 }
 
 bool Linea4::isColumnFull(int column){
-for(int fila = 0; fila < ROWS; fila++){
-    if(board[fila][column] == 0){ //si no hay nada en esa casilla
-      return false;
+  for(int fila = 0; fila < ROWS; fila++){
+      if(board[fila][column] == 0){ //si no hay nada en esa casilla
+        return false;
+      }
     }
-  }
-return true; //retorna true cuando alguna columna está llena de fichas.
+  return true; //retorna true cuando alguna columna está llena de fichas.
 }
 
 void Linea4::move(int b[ROWS][COL],int col, int player){
 // toma el tablero, la columna y el jugador
-for (int i = 0; i < ROWS; i++) {
-  if(!isColumnFull(col)){//mientras esa columna no este llena
-    if (b[i][col] == 0) { // Lo pone en la primera fila disponible
-      b[i][col] = player; // posiciona la pieza en esa casilla
-      break;
+  for (int i = 0; i < ROWS; i++) {
+    if(!isColumnFull(col)){//mientras esa columna no este llena
+      if (b[i][col] == 0) { // Lo pone en la primera fila disponible
+        b[i][col] = player; // posiciona la pieza en esa casilla
+        break;
+      }
     }
   }
-}
 }
 
 int Linea4::movUser(){
 
-cout << "Es tu turno..." << endl;
-int movim;
+  cout << "Es tu turno..." << endl;
+  int movim;
 
-while(true){//repita el proceso hasta que se ingrese un valor valido
-  cout << "Ingrese la columna en la que desea poner su ficha: ";
-  cin >> movim; //tomo como input en donde la pondra
+  while(true){//repita el proceso hasta que se ingrese un valor valido
+    cout << "Ingrese la columna en la que desea poner su ficha: ";
+    cin >> movim; //tomo como input en donde la pondra
 
-  if(isalpha(movim)){
-    cout << "Ingrese un numero entre 0 y 6" << endl;
+    if(isalpha(movim)){
+      cout << "Ingrese un numero entre 0 y 6" << endl;
+    }
+    if (!(movim >= 0 && movim < COL)){
+      cout << "Esa no es una columna valida" << endl; //se puede hacer con un except
+    }else if (isColumnFull(movim)) { // En caso de que la columna ya este llena
+      cout << "Esa columna ya esta llena" << endl; //se puede hacer con un except
+    cout << endl;
+    }else{
+      break;
+    }
   }
-  if (!(movim >= 0 && movim < COL)){
-    cout << "Esa no es una columna valida" << endl; //se puede hacer con un except
-  }else if (isColumnFull(movim)) { // En caso de que la columna ya este llena
-    cout << "Esa columna ya esta llena" << endl; //se puede hacer con un except
-  cout << endl;
-  }else{
-    break;
-  }
-}
-return movim;
+  return movim;
 }
 
 int Linea4::moveAI(){
-cout << "Es mi turno..." << endl;
+  cout << "Es mi turno..." << endl;
   return MiniMax();
 }
 
 int Linea4::heuristica(vector<int> s, int p){
 
-unsigned int blank = 0; // puntos neutros
-unsigned int bad = 0; // puntos a favor del otro jugador p
-unsigned int good = 0; // puntos a favor de p
+  unsigned int blank = 0; // puntos neutros
+  unsigned int bad = 0; // puntos a favor del otro jugador p
+  unsigned int good = 0; // puntos a favor de p
 
-int score = 0;
+  int score = 0;
 
-for (int i = 0; i < s.size(); i++) { //hago la cuenta de cuantos hay de cada uno
-  if (s[i] == p){//Si en esa casilla hay una ficha del jugador
-    good+=1;//sumo a fichas a favor
-  }else if(s[i] == 0){
-    blank+=1;
-  }else{
-    bad+=1;
+  for (int i = 0; i < s.size(); i++) { //hago la cuenta de cuantos hay de cada uno
+    if (s[i] == p){//Si en esa casilla hay una ficha del jugador
+      good+=1;//sumo a fichas a favor
+    }else if(s[i] == 0){
+      blank+=1;
+    }else{
+      bad+=1;
+    }
   }
-}
 
-if (good == 4)
-  score += 1001;  //prefiere ganar que bloquear
-else if (good == 3 && blank == 1)
-  score += 500;
-else if (good == 2 && blank == 2)
-  score += 50;
-else if (bad == 2 && blank == 2)
-  score -= 51;  //prefiere bloquear
-else if (bad == 3 && blank == 1)
-  score -= 501;  //prefiere bloquear
-else if (bad == 4)
-  score -= 1000;
+  if (good == 4)
+    score += 1001;  //prefiere ganar que bloquear
+  else if (good == 3 && blank == 1)
+    score += 500;
+  else if (good == 2 && blank == 2)
+    score += 50;
+  else if (bad == 2 && blank == 2)
+    score -= 51;  //prefiere bloquear
+  else if (bad == 3 && blank == 1)
+    score -= 501;  //prefiere bloquear
+  else if (bad == 4)
+    score -= 1000;
 
-return score;
+  return score;
 }
 
 int Linea4::eval4(int b[ROWS][COL], int p){ //toma el estado actual del tablero y el jugador en turno
-int puntos = 0;//contador el puntaje inicializado en 0
-vector<int> r(COL);//vector que define las filas
-vector<int> c(ROWS); //vector que define las columnas
-vector<int> segm(4); //revisa en segmentos de a 4 espacios
+  int puntos = 0;//contador el puntaje inicializado en 0
+  vector<int> r(COL);//vector que define las filas
+  vector<int> c(ROWS); //vector que define las columnas
+  vector<int> segm(4); //revisa en segmentos de a 4 espacios
 
-// ver
-for (int y = 0; y < COL; y++){
-  for (int x = 0; x < ROWS; x++){
-    c[x] = b[x][y]; //columna con un elem en cada fila
-  }
-
-  for (int i = 0; i < 4; i++){//4 casillas
-    for (int x = 0; x < ROWS - 3; x++){//estoy dentro de los limites
-      segm[i] = c[x + i];//casillas contiguas en la columna
-    }
-    puntos += heuristica(segm, p);//puntaje para ese jugador en ese segmento vertical
-  }
-}
-
-//hor
-for (int x = 0; x < ROWS; x++){
+  // ver
   for (int y = 0; y < COL; y++){
-    r[x] = b[x][y]; //esta es una fila que contiene un elem por cada columna
-  }
-  for (int i = 0; i < 4; i++){//tomo 4 espacios
-    for (int y = 0; y < COL - 3; y++){//asi no me salgo del tablero
-      segm[i] = r[y + i];
-    }//Son las posibles 4 contiguas en esa fila
-    puntos += heuristica(segm, p); //puntaje para ese jugador en ese segmento
-  }
-}
+    for (int x = 0; x < ROWS; x++){
+      c[x] = b[x][y]; //columna con un elem en cada fila
+    }
 
-//diag de arriba a abajo
+    for (int i = 0; i < 4; i++){//4 casillas
+      for (int x = 0; x < ROWS - 3; x++){//estoy dentro de los limites
+        segm[i] = c[x + i];//casillas contiguas en la columna
+      }
+      puntos += heuristica(segm, p);//puntaje para ese jugador en ese segmento vertical
+    }
+  }
+
+  //hor
+  for (int x = 0; x < ROWS; x++){
+    for (int y = 0; y < COL; y++){
+      r[x] = b[x][y]; //esta es una fila que contiene un elem por cada columna
+    }
+    for (int i = 0; i < 4; i++){//tomo 4 espacios
+      for (int y = 0; y < COL - 3; y++){//asi no me salgo del tablero
+        segm[i] = r[y + i];
+      }//Son las posibles 4 contiguas en esa fila
+      puntos += heuristica(segm, p); //puntaje para ese jugador en ese segmento
+    }
+  }
+
+  //diag de arriba a abajo
+    for (int x = 0; x < ROWS - 3; x++){
+      for (int y = 0; y < COL; y++){
+        r[y] = b[x][y];
+      }
+      for (int i = 0; i < 4; i++){
+        for (int y = 0; y < COL - 3; y++){
+          segm[i] = b[x + 3 - i][y + i]; //si no funciona prueba con -i en ambos lados
+        }
+        puntos += heuristica(segm, p);//puntaje para ese jugador en ese segmento
+      }
+    }
+
+  // diag de abajo a arriba
   for (int x = 0; x < ROWS - 3; x++){
     for (int y = 0; y < COL; y++){
-      r[y] = b[x][y];
+      r[y] = board[x][y];//fila
     }
     for (int i = 0; i < 4; i++){
-      for (int y = 0; y < COL - 3; y++){
-        segm[i] = b[x + 3 - i][y + i]; //si no funciona prueba con -i en ambos lados
+      for (int y = 0; y < COL - 3; y++){//estoy en los limites del tablero
+        segm[i] = board[x + i][y + i];
       }
       puntos += heuristica(segm, p);//puntaje para ese jugador en ese segmento
     }
   }
-
-// diag de abajo a arriba
-for (int x = 0; x < ROWS - 3; x++){
-  for (int y = 0; y < COL; y++){
-    r[y] = board[x][y];//fila
-  }
-  for (int i = 0; i < 4; i++){
-    for (int y = 0; y < COL - 3; y++){//estoy en los limites del tablero
-      segm[i] = board[x + i][y + i];
-    }
-    puntos += heuristica(segm, p);//puntaje para ese jugador en ese segmento
-  }
-}
-return puntos;
+  return puntos;
 }
 
 bool Linea4::isWinner(int player, int b[ROWS][COL]){
@@ -239,11 +239,14 @@ int Linea4::MiniMax(){
 
 
   if(isWinner(AI,copy_board_max)){
-    best_move = MaxMove;
+    if(!isColumnFull(MaxMove))
+      best_move = MaxMove;
   }else if(isWinner(AI,copy_board_min)){
-    best_move = MinMove;
+    if(!isColumnFull(MinMove))
+      best_move = MinMove;
   }else if(isWinner(USER, copy_board_maxu)){
-    best_move = MaxMoveUser;
+    if(!isColumnFull(MaxMoveUser))
+      best_move = MaxMoveUser;
   }else if((!isWinner(AI,copy_board_max))&&(!isWinner(AI,copy_board_min))&&(!isWinner(USER, copy_board_maxu))){
     //cout << "move minimax" << endl;
     absMinVal = abs(eval4(copy_board_min, USER));
@@ -251,24 +254,17 @@ int Linea4::MiniMax(){
     absMaxVal = abs(eval4(copy_board_max, AI));
     //cout <<"eval 4 max" <<eval4(copy_board_max, AI) << endl;
     if(absMaxVal < absMinVal){
-      best_move = MinMove;
+      if(!isColumnFull(MinMove))
+        best_move = MinMove;
     }else{
-      best_move = MaxMove;
+      if(!isColumnFull(MaxMove))
+        best_move = MaxMove;
     }
+
   }else{
-    if(!isColumnFull(3)){
-      best_move = 3;
-    }else if(!isColumnFull(4) || !isColumnFull(5) || !isColumnFull(6)){
-      for(int col = 6; col > 3; col--){
-        if(!isColumnFull(col)){
-          best_move = col;
-        }
-      }
-    }else{
-      for(int col = 0; col < 3; col++){
-        if(!isColumnFull(col)){
-          best_move = col;
-        }
+    for(int col = 0; col < COL; col++){
+      if(!isColumnFull(col)){
+        best_move = col;
       }
     }
   }
@@ -412,7 +408,7 @@ int Linea4::Max(int p){
   return best_move; //Retornar el movimiento que maximiza el puntaje
 }
 
-  void Linea4::play(){
+void Linea4::play(){
   cout << "Juguemos 4 en linea!" << endl;
   // cout << "Escoge el nivel de dificultad: " << endl;
   // cin >> dif;
