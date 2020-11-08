@@ -2,7 +2,7 @@
 #ifndef _CONNECT4_HPP
 #define _CONNECT4_HPP
 
-#include <array>
+#include <vector>
 using namespace std;
 
 const int ROWS = 6; // número de filas.
@@ -26,7 +26,7 @@ int moveAI();
 
 int heuristica(int s[4], int p);
 int eval4(int b[ROWS][COL], int p);
-array<int, 2> miniMax(int b[ROWS][COL], int d, int p);
+vector<int> miniMax(int b[ROWS][COL], int d, int p);
 
 public:
 

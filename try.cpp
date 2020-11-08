@@ -7,7 +7,7 @@ const int AI = 2;
 
 
 
-unsigned int DEPTH = 5;
+unsigned int DEPTH = 3;
 
 Linea4::Linea4(){//constructor del juego
   for(int f = 0; f < ROWS; f++){
@@ -55,7 +55,6 @@ bool Linea4::isColumnFull(int column, int b[ROWS][COL]){
     }
   return true; //retorna true cuando alguna columna está llena de fichas.
 }
-
 
 void Linea4::move(int b[ROWS][COL],int col, int player){
 // toma el tablero, la columna y el jugador
@@ -225,19 +224,19 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
   }
 }
 
-array<int, 2> Linea4::miniMax(int b[ROWS][COL], int d, int p){
-  //arreglo de 2 enteros {columna, puntaje}
+vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
+  //vector de 2 enteros {columna, puntaje}
   //alpha es la mejor opcion para maximizar
   //beta es la mejor opcion para el jugador a minimizar
 
   if (d == 0){
     // retorno el puntaje para esa situacion
-    return array<int, 2>{8, eval4(b, AI)};
+    return vector<int, 2>{8, eval4(b, AI)};
   }
 
   //mini
   if(p == USER){//si es el jugador a minimizar
-    array<int, 2> bestMov = {8, INT_MAX}; //vamos a minimizar al oponente
+    vector<int> bestMov = {8, INT_MAX}; //vamos a minimizar al oponente
     if (isWinner(AI, b)){
       return bestMov; //Si va a ganar el AI ese va a ser el mejor mov
     }
@@ -265,7 +264,7 @@ array<int, 2> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   //max
   }else{ // si es el jugador a maximizar
-    array<int, 2> bestMov = {8, INT_MIN}; // Para maximizar comenzamos con el menor valor posible
+    vector<int> bestMov = {8, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
     if (isWinner(USER, b)){ //cuando el oponente va a ganar
       return bestMov; //retorno ese movimiento y para conocer su valor
     }
@@ -291,8 +290,6 @@ array<int, 2> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   }
 }
-
-
 
 //==============================================================================
 // FUNCIONES PRIVADAS
