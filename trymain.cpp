@@ -20,8 +20,7 @@ int main(){
     if(b == 0){
       juego.playAI();
       cout << endl << "Jugar de nuevo?" << endl;
-      cout << "[1] si" << endl;
-      cout << "[0] no" << endl;
+      cout << "Ingrese [1] para volver a jugar, y cualquier otro valor para salir: ";
       cin >> h;
         if(h != 1){
           playing == false;
@@ -31,13 +30,14 @@ int main(){
     }else if(b == 1){
       juego.play2players();
       cout << endl << "Jugar de nuevo?" << endl;
-      cout << "[1] si" << endl;
-      cout << "[0] no" << endl;
+      cout << "Ingrese [1] para volver a jugar, y cualquier otro valor para salir: ";
       cin >> h;
         if(h != 1){
           playing == false;
           break;
         }
+    }else{
+      cout << "Ingrese 1 o 0" << endl;
     }
   }
 
