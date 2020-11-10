@@ -4,7 +4,8 @@
 int turn = 0;
 const int USER = 1;
 const int AI = 2;
-
+const int INT_MAX = 99999999;
+const int INT_MIN = -99999999;
 
 
 unsigned int DEPTH = 3;
@@ -231,7 +232,7 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   if (d == 0){
     // retorno el puntaje para esa situacion
-    return vector<int, 2>{8, eval4(b, AI)};
+    return vector<int>{8, eval4(b, AI)};
   }
 
   //mini
@@ -264,7 +265,7 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   //max
   }else{ // si es el jugador a maximizar
-    vector<int> bestMov = {8, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
+    vector<int> bestMov = {7, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
     if (isWinner(USER, b)){ //cuando el oponente va a ganar
       return bestMov; //retorno ese movimiento y para conocer su valor
     }
@@ -383,9 +384,10 @@ void Linea4::play(){
 
   bool gameover = false;//inicializador del juego
   int player = USER; //jugador actual
+  bool board_full = false;
   //int turn = 0; //count para los turnos
 
-  while (!gameover){
+  while (!gameover && !board_full){
     if(player == USER){ // Mueve el usuario en el primer turno
       move(board, movUser(), 1);
       cout << "turno:" << turn;
@@ -398,7 +400,8 @@ void Linea4::play(){
       gameover = true;
     }
 
-    gameover = isWinner(player, board); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
+    gameover = isWinner(player, board); //Revisa si el jugador gano.
+    board_full = isColumnFull(0, board) && isColumnFull(1, board) && isColumnFull(2, board) && isColumnFull(3, board) && isColumnFull(4, board) && isColumnFull(5, board) && isColumnFull(6, board);
 
     if(player == 1){
       player = 2;
@@ -414,7 +417,10 @@ void Linea4::play(){
     printBoard(board); //imprimo el tablero tras cada mov
   }
 
-
+    if(gameover == false){
+        cout << "Empate!" << endl;
+      }
+/*
   if(turn == CELLS && !(isWinner(player, board) != 0)){
     cout << "Empate" << endl;
 
@@ -423,11 +429,12 @@ void Linea4::play(){
     cout << "Empate" << endl;
 
   }else{ // Si alguien gana
-
-    if (player == AI){
+*/
+    if (player == AI && !board_full){
       cout << "Usuario gana(X)!"<<endl;
-    }else if(player == USER){
-      cout << "AI gana(O)!" <<endl;
     }
+    else if(player == USER && !board_full){
+      cout << "AI gana(O)!" <<endl;
+    //}
   }
 }
