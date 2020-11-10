@@ -1,11 +1,12 @@
+
 #include <iostream>	 // consola de la libreria standard (STL)
+#include <climits>
 #include "try.hpp"
 
-int turn = 0;
+int turn;
 const int USER = 1;
 const int AI = 2;
-const int INT_MAX = 99999999;
-const int INT_MIN = -99999999;
+
 
 
 unsigned int DEPTH = 3;
@@ -232,7 +233,7 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   if (d == 0){
     // retorno el puntaje para esa situacion
-    return vector<int>{8, eval4(b, AI)};
+    return vector <int> {8, eval4(b, AI)};
   }
 
   //mini
@@ -265,7 +266,7 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   //max
   }else{ // si es el jugador a maximizar
-    vector<int> bestMov = {7, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
+    vector<int> bestMov = {8, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
     if (isWinner(USER, b)){ //cuando el oponente va a ganar
       return bestMov; //retorno ese movimiento y para conocer su valor
     }
@@ -375,19 +376,22 @@ bool Linea4::VerificarD(int player, int b[ROWS][COL]){
   return false; //si no, nadie ha ganado
 }
 //---------------------------------------------------------------------------
+//JUEGO PARA UN JUGADOR
+//---------------------------------------------------------------------------
 
-void Linea4::play(){
+void Linea4::playAI(){
   cout << "Juguemos 4 en linea!" << endl;
+  turn = 0;
   // cout << "Escoge el nivel de dificultad: " << endl;
   // cin >> dif;
   printBoard(board);
 
   bool gameover = false;//inicializador del juego
   int player = USER; //jugador actual
-  bool board_full = false;
   //int turn = 0; //count para los turnos
+  int c;
 
-  while (!gameover && !board_full){
+  while (!gameover){
     if(player == USER){ // Mueve el usuario en el primer turno
       move(board, movUser(), 1);
       cout << "turno:" << turn;
@@ -398,10 +402,22 @@ void Linea4::play(){
     }
     else if (turn == CELLS-1){ // Si llego al num max de turnos
       gameover = true;
+      break;
     }
 
-    gameover = isWinner(player, board); //Revisa si el jugador gano.
-    board_full = isColumnFull(0, board) && isColumnFull(1, board) && isColumnFull(2, board) && isColumnFull(3, board) && isColumnFull(4, board) && isColumnFull(5, board) && isColumnFull(6, board);
+
+    c = 0;
+    for(int i = 0; i < COL; i++){
+      if (isColumnFull(i,board)){
+          c++;
+      }
+    }
+
+    if(c == 7){
+      gameover = true;
+    }else{
+      gameover = isWinner(player, board); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
+    }
 
     if(player == 1){
       player = 2;
@@ -417,24 +433,82 @@ void Linea4::play(){
     printBoard(board); //imprimo el tablero tras cada mov
   }
 
-    if(gameover == false){
-        cout << "Empate!" << endl;
-      }
-/*
-  if(turn == CELLS && !(isWinner(player, board) != 0)){
-    cout << "Empate" << endl;
 
-
-  }else if (turn == CELLS-1){ // Si es empate
-    cout << "Empate" << endl;
+  if(!(isWinner(1, board) != 0 || isWinner(2, board) != 0)){
+    cout << endl << "Empate" << endl;
 
   }else{ // Si alguien gana
-*/
-    if (player == AI && !board_full){
+
+    if (player == AI){
       cout << "Usuario gana(X)!"<<endl;
-    }
-    else if(player == USER && !board_full){
+    }else if(player == USER){
       cout << "AI gana(O)!" <<endl;
-    //}
+    }
+  }
+}
+
+//---------------------------------------------------------------------------
+//JUEGO PARA DOS JUGADORES
+//---------------------------------------------------------------------------
+
+void Linea4::play2players(){
+  cout << "Juguemos 4 en linea!" << endl;
+  turn = 0;
+  // cout << "Escoge el nivel de dificultad: " << endl;
+  // cin >> dif;
+  printBoard(board);
+
+  bool gameover = false;//inicializador del juego
+  int player = USER; //jugador actual
+  //int turn = 0; //count para los turnos
+  int c;
+
+  while (!gameover){
+    if(player == USER){ // Mueve el usuario en el primer turno
+      move(board, movUser(), 1);
+      cout << "turno:" << turn;
+    }
+    else if (player == AI){ // Mueve el AI
+      move(board, movUser(), 2); //cambiar movuser por movAI cuando exista el algoritmo
+      cout << "turno:" << turn;
+    }
+
+    c = 0;
+    for(int i = 0; i < COL; i++){
+      if (isColumnFull(i,board)){
+        c++;
+      }
+    }
+
+    if(c == 7){
+      gameover = true;
+    }else{
+      gameover = isWinner(player, board); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
+    }
+
+    if(player == 1){
+      player = 2;
+    }else{
+      player = 1;
+    }
+
+    turn +=1; //voy incrementando los turnos
+
+    //turn = turn%2;//si es par el turno le toca al usuario
+    cout << endl;
+
+    printBoard(board); //imprimo el tablero tras cada mov
+  }
+
+
+  if(!(isWinner(1, board) != 0 || isWinner(2, board) != 0)){
+    cout << endl << "Empate" << endl;
+
+  }else{ // Si alguien gana
+    if (player == AI){
+      cout << "Gana Usuario 1 (X)!"<<endl;
+    }else if(player == USER){
+      cout << "Gana Usuario 2 (O)!" <<endl;
+    }
   }
 }
