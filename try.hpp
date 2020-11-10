@@ -1,6 +1,5 @@
-
-#ifndef _CONNECT4_HPP
-#define _CONNECT4_HPP
+#ifndef _TRY_HPP
+#define _TRY_HPP
 
 #include <vector>
 using namespace std;
@@ -40,8 +39,8 @@ void move(int b[ROWS][COL], int col, int player);
 bool isColumnFull(int column, int b[ROWS][COL]); // si alguna columna está llena.
 bool isWinner(int player, int b[ROWS][COL]); // dice si hay ganador.
 
-void play(); // para empezar el juego.
-
+void playAI(); // para empezar el juego.
+void play2players(); // para empezar el juego.
 
 };
 
