@@ -233,12 +233,12 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   if (d == 0){
     // retorno el puntaje para esa situacion
-    return vector <int> {8, eval4(b, AI)};
+    return vector <int> {7, eval4(b, AI)};
   }
 
   //mini
   if(p == USER){//si es el jugador a minimizar
-    vector<int> bestMov = {8, INT_MAX}; //vamos a minimizar al oponente
+    vector<int> bestMov = {7, INT_MAX}; //vamos a minimizar al oponente
     if (isWinner(AI, b)){
       return bestMov; //Si va a ganar el AI ese va a ser el mejor mov
     }
@@ -266,11 +266,8 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   //max
   }else{ // si es el jugador a maximizar
-    vector<int> bestMov = {8, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
-    if (isWinner(USER, b)){ //cuando el oponente va a ganar
-      return bestMov; //retorno ese movimiento y para conocer su valor
-    }
-
+    vector<int> bestMov = {7, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
+	  
     for (int c = 0; c < COL; c++){ //para cada columna
       if (!isColumnFull(c, b)){ //si es posible hacer un movimiento
 
