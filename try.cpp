@@ -1,4 +1,3 @@
-
 #include <iostream>	 // consola de la libreria standard (STL)
 #include <climits>
 #include "try.hpp"
@@ -226,19 +225,34 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
   }
 }
 
+int Linea4::SelectColumn(int b[ROWS][COL]){
+  vector<int> v;
+  for(int i = 0; i < COL; i++){
+    for(int j = 0; j < ROWS; j++){
+      if(b[j][i] == 0){
+        v.push_back(i);
+        break;
+      }
+    }
+  }
+  int randomIndex = rand()% v.size();
+  return v[randomIndex];
+}
+
 vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
   //vector de 2 enteros {columna, puntaje}
   //alpha es la mejor opcion para maximizar
   //beta es la mejor opcion para el jugador a minimizar
 
+  int column_selected = SelectColumn(b);
   if (d == 0){
     // retorno el puntaje para esa situacion
-    return vector <int> {7, eval4(b, AI)};
+    return vector<int> {column_selected, eval4(b, AI)};
   }
 
   //mini
   if(p == USER){//si es el jugador a minimizar
-    vector<int> bestMov = {7, INT_MAX}; //vamos a minimizar al oponente
+    vector<int> bestMov = {column_selected, INT_MAX}; //vamos a minimizar al oponente
     if (isWinner(AI, b)){
       return bestMov; //Si va a ganar el AI ese va a ser el mejor mov
     }
@@ -266,8 +280,8 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
   //max
   }else{ // si es el jugador a maximizar
-    vector<int> bestMov = {7, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
-	  
+    vector<int> bestMov = {column_selected, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
+
     for (int c = 0; c < COL; c++){ //para cada columna
       if (!isColumnFull(c, b)){ //si es posible hacer un movimiento
 
