@@ -1,14 +1,12 @@
 #include <iostream>	 // consola de la libreria standard (STL)
-#include <climits>
+//#include <climits>
 #include "try.hpp"
 
-int turn;
+int turn = 0;
 const int USER = 1;
 const int AI = 2;
 
-
-
-unsigned int DEPTH = 3;
+unsigned int DEPTH = 4;
 
 Linea4::Linea4(){//constructor del juego
   for(int f = 0; f < ROWS; f++){
@@ -49,7 +47,7 @@ void Linea4::printBoard(int b[ROWS][COL]){
 }
 
 bool Linea4::isColumnFull(int column, int b[ROWS][COL]){
-  for(int fila = 0; fila < ROWS; fila++){
+  for(int fila = 0; fila < ROWS; fila++){//recorre cada fila
       if(b[fila][column] == 0){ //si no hay nada en esa casilla
         return false;
       }
@@ -58,7 +56,7 @@ bool Linea4::isColumnFull(int column, int b[ROWS][COL]){
 }
 
 void Linea4::move(int b[ROWS][COL],int col, int player){
-// toma el tablero, la columna y el jugador
+  // toma el tablero, la columna y el jugador
   for (int i = 0; i < ROWS; i++){
     if(!isColumnFull(col, b)){//mientras esa columna no este llena
       if (b[i][col] == 0){ // Lo pone en la primera fila disponible
@@ -80,7 +78,7 @@ int Linea4::movUser(){
 
       if(!cin){// en caso de que el input no sea un entero
         cin.clear();
-        cin.ignore(INT_MAX, '\n');
+        cin.ignore(INT_MAX, '\n'); //ignora el input que ha sido ingresado
         cout << "Ingrese un numero entre 0 y 6" << endl;
       }
       else if (!(col >= 0 && col < COL)){
@@ -92,11 +90,11 @@ int Linea4::movUser(){
         break;
       }
     }
-    return col;
+    return col;//columna escogida por el usuario
   }
 
 int Linea4::moveAI(){
-  int col = miniMax(board, DEPTH, AI)[0]; //retorna la columna
+  int col = miniMax(board, DEPTH, AI, MIN, MAX)[0]; //retorna la columna
   cout << "Es mi turno, voy a poner en la columna: " << col << endl;
   return col;
 }
@@ -206,8 +204,9 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
   Funcion que verifica si el jugador player ganó la partida
   Dentro la función del juego se verificará por separado jugador 1 y jugador 2
   */
-  // 1. Se verifica verticalmente si hay 4 fichas alineadas
+
   if(VerificarV(player, b) == true){
+    // 1. Se verifica verticalmente si hay 4 fichas alineadas
     //cout << "We have a winner. Player "<< player << " wins!";
     return true;
   }else if(VerificarH(player, b) == true){
@@ -225,39 +224,25 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
   }
 }
 
-int Linea4::SelectColumn(int b[ROWS][COL]){
-  vector<int> v;
-  for(int i = 0; i < COL; i++){
-    for(int j = 0; j < ROWS; j++){
-      if(b[j][i] == 0){
-        v.push_back(i);
-        break;
-      }
-    }
-  }
-  int randomIndex = rand()% v.size();
-  return v[randomIndex];
-}
-
-vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
+vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta){
   //vector de 2 enteros {columna, puntaje}
   //alpha es la mejor opcion para maximizar
   //beta es la mejor opcion para el jugador a minimizar
 
-  int column_selected = SelectColumn(b);
-  if (d == 0){
+  if (d == 0){ // si llegue a la profundidad 0
     // retorno el puntaje para esa situacion
-    return vector<int> {column_selected, eval4(b, AI)};
+    return vector<int>{7, eval4(b, AI)};
   }
 
   //mini
   if(p == USER){//si es el jugador a minimizar
-    vector<int> bestMov = {column_selected, INT_MAX}; //vamos a minimizar al oponente
-    if (isWinner(AI, b)){
-      return bestMov; //Si va a ganar el AI ese va a ser el mejor mov
-    }
+    vector<int> bestMov = {3, MAX}; //vamos a minimizar al oponente
 
-    for (int c = 0; c < COL; c++){
+    // if (isWinner(AI, b)){
+    //   return bestMov; //Si va a ganar el AI ese va a ser el mejor mov
+    // }
+
+    for (int c = 0; c < COL; c++){//recorre las columnas
       if (!isColumnFull(c, b)){ // si es posible poner una ficha ahi
 
         int copyBoard [ROWS][COL];//copia del estado actual del tablero
@@ -268,19 +253,29 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
         }
 
         move(copyBoard, c, p); //pruebo ese movimiento en la copia
-        int score = miniMax(copyBoard, d - 1, AI)[1]; // mi puntaje va a ser el del siguiente nivel
+        int score = miniMax(copyBoard, d - 1, AI, alpha, beta)[1]; // mi puntaje va a ser el del siguiente nivel
 
         if (score < bestMov[1]){
-          bestMov = {c, score};
+          bestMov = {c, score}; //reemplazo
         }
 
+        beta = min(bestMov[1], beta); // beta es el menor entre el mejor mov y el beta actual
+        //voy comparando tomo el menor (mas negativo)
+
+        if (alpha >= beta){
+          break;
+        }
       }
     }
     return bestMov;//retorno la mejor opcion posible
 
   //max
   }else{ // si es el jugador a maximizar
-    vector<int> bestMov = {column_selected, INT_MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
+    vector<int> bestMov = {3, MIN}; // Para maximizar comenzamos con el menor valor posible y una col cualquiera
+
+    // if (isWinner(USER, b)){
+    //   return bestMov; //Si va a ganar el AI ese va a ser el mejor mov
+    // }
 
     for (int c = 0; c < COL; c++){ //para cada columna
       if (!isColumnFull(c, b)){ //si es posible hacer un movimiento
@@ -293,14 +288,17 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p){
 
         }
         move(copyBoard, c, p); //pruebo ese movimiento
-        int score = miniMax(copyBoard, d - 1, USER)[1]; //Encuentro el valor asociado al siguiente nivel
+        int score = miniMax(copyBoard, d - 1, USER, alpha, beta)[1]; //Encuentro el valor asociado al siguiente nivel
         if (score > bestMov[1]){ // Si el puntaje es mejor
           bestMov = {c, score}; // se convierte en mi nuevo mov posible
+        }
+        alpha = max(bestMov[1], alpha); //alpha toma el mayr entre las opciones analizadas
+        if (alpha >= beta){
+          break;
         }
       }
     }
     return bestMov; //retorno ese mejor movimiento posible
-
   }
 }
 
@@ -404,7 +402,7 @@ void Linea4::playAI(){
 
   while (!gameover){
     if(player == USER){ // Mueve el usuario en el primer turno
-      move(board, movUser(), 1);
+      move(board, moveAI(), 1);
       cout << "turno:" << turn;
     }
     else if (player == AI){ // Mueve el AI

@@ -7,7 +7,8 @@ using namespace std;
 const int ROWS = 6; // número de filas.
 const int COL = 7; // número de columnas.
 const int CELLS = 42; //num total de casillas
-
+const int MAX = 1000;
+const int MIN = -1000;
 
 
 class Linea4{
@@ -25,9 +26,7 @@ int moveAI();
 
 int heuristica(int s[4], int p);
 int eval4(int b[ROWS][COL], int p);
-vector<int> miniMax(int b[ROWS][COL], int d, int p);
-
-int SelectColumn(int b[ROWS][COL]);
+vector<int> miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta);
 
 public:
 
