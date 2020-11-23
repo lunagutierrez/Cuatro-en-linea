@@ -27,6 +27,8 @@ int moveAI();
 int heuristica(int s[4], int p);
 int eval4(int b[ROWS][COL], int p);
 vector<int> miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta);
+  
+int SelectColumn(int b[ROWS][COL]);
 
 public:
 
