@@ -445,7 +445,7 @@ void Linea4::playAI(){
     else if(dif == 1) DEPTH = 6;
     else if(dif == 2) DEPTH = 8;
     else{
-      cout << "ERROR: ingrese la dificultad correcta... 0,1,2: ";
+      cout << "ERROR: ingrese la dificultad correcta, 0,1,2: ";
       cin >> dif;
       if(dif == 0) DEPTH = 4;
       else if(dif == 1) DEPTH = 6;
