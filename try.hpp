@@ -1,3 +1,4 @@
+
 #ifndef _TRY_HPP
 #define _TRY_HPP
 
@@ -14,7 +15,8 @@ const int MIN = -1000;
 class Linea4{
 private:
   int board[ROWS][COL]; //el tablero es una matriz.
-
+  int DEPTH;
+  int turn;
   // Funciones de verificación, ya se puede acceder al tablero como atributo
   // de la clase
   bool VerificarV(int player, int b[ROWS][COL]); //verifica verticalmente si hay ganador.
@@ -31,10 +33,6 @@ private:
   int SelectColumn(int b[ROWS][COL]);
   int Winner_next(int player, int b[ROWS][COL]);
 
-public:
-
-  Linea4(); // construir.
-  //~Linea4(); // opcional.
   void printBoard(int b[ROWS][COL]); // imprimir el tablero.
 
   void move(int b[ROWS][COL], int col, int player);
@@ -42,6 +40,11 @@ public:
 
   bool isColumnFull(int column, int b[ROWS][COL]); // si alguna columna está llena.
   bool isWinner(int player, int b[ROWS][COL]); // dice si hay ganador.
+
+public:
+
+  Linea4(); // construir.
+  //~Linea4(); // opcional.
 
   void playAI(); // para empezar el juego.
   void play2players(); // para empezar el juego.
