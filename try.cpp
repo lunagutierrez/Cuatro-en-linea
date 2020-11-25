@@ -1,4 +1,3 @@
-
 #include <iostream>	 // consola de la libreria standard (STL)
 #include <climits>
 #include "try.hpp"
@@ -76,8 +75,8 @@ void Linea4::move(int b[ROWS][COL],int col, int player){
     if (b[i][col] == 0){ // Lo pone en la primera fila disponible
       b[i][col] = player; // posiciona la pieza en esa casilla
       break;
-      }
     }
+  }
 }
 
 int Linea4::movUser(){
@@ -108,12 +107,15 @@ int Linea4::movUser(){
 
 int Linea4::moveAI(){
   int col;
+  int winAI = Winner_next(AI, board);
+  int winUSER = Winner_next(USER, board);
 
-  if (Winner_next(AI, board) >= 0){
-    col = Winner_next(AI,board);
-  }else{
+  if (winAI >= 0){
+    col = winAI;
+  }else if(winUSER >= 0){
+    col = winUSER;
+  }else
     col = miniMax(board, DEPTH, AI, MIN, MAX)[0]; //retorna la columna
-  }
 
   cout << "Es mi turno, voy a poner en la columna: " << col << endl;
   return col;
@@ -246,29 +248,23 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
 
 int Linea4::Winner_next(int player, int b[ROWS][COL]){
 
-  int copyBoard [ROWS][COL]; //copia del estado actual del tablero
-  for(int i = 0; i < ROWS; i++){
-    for(int j = 0; j < COL; j++){
-      copyBoard[i][j] = b[i][j];
-    }
-  }
-
-  int columna = -1;;
-
   for(int j = 0; j < COL; j++){
-    for (int i = 0; i < ROWS; i++){
-      if (copyBoard[i][j] == 0){ // Lo pone en la primera fila disponible
-        copyBoard[i][j] = player; // posiciona la pieza en esa casilla
-        if(isWinner(player, copyBoard)){
-          //cout << "GANE CON LA COLUMNA " << j << endl;
-          return j;
-        }else{
-          copyBoard[i][j] = 0;
+    if(!isColumnFull(j,b)){
+      for(int i = 0; i < ROWS; i++){
+        if (b[i][j] == 0){ // Lo pone en la primera fila disponible
+          b[i][j] = player;
+          if(isWinner(player,b)){
+            //cout << "GANA " << player << " COLUMNA " << j << endl;
+            b[i][j] = 0;
+            return j;
+          }
+          b[i][j] = 0;
+          break;
         }
       }
     }
   }
-  return columna;
+  return -1;
 }
 
 vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta){
@@ -279,8 +275,10 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta)
 
   int column_selected = SelectColumn(b);
 
+  while (d >= COL*ROWS - turn)
+    d--;
 
-  if (d == 0||d >= CELLS - turn){ // si llegue a la profundidad 0
+  if (d == 0){ // si llegue a la profundidad 0
     // retorno el puntaje para esa situacion
     return vector<int>{column_selected, eval4(b, AI)};
   }
