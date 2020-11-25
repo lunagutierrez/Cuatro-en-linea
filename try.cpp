@@ -1,14 +1,14 @@
+
 #include <iostream>	 // consola de la libreria standard (STL)
 #include <climits>
 #include "try.hpp"
 
-int turn = 0;
 const int USER = 1;
 const int AI = 2;
 
-unsigned int DEPTH = 0;
-
 Linea4::Linea4(){//constructor del juego
+  DEPTH = 0;
+  turn = 0;
   for(int f = 0; f < ROWS; f++){
     for(int c = 0;c < COL; c++){
       board[f][c] = 0; // inicializar el tablero en ceros.
@@ -441,16 +441,22 @@ void Linea4::playAI(){
   cin >> dif;
 
   do{
-    if(dif == 0) DEPTH = 4;
-    else if(dif == 1) DEPTH = 6;
-    else if(dif == 2) DEPTH = 8;
-    else{
+    if(dif == 0){
+       DEPTH = 4;
+       break;
+    }else if(dif == 1){
+      DEPTH = 6;
+      break;
+    }else if(dif == 2){
+       DEPTH = 8;
+       break;
+    }else{
       cout << "ERROR: ingrese la dificultad correcta, 0,1,2: ";
       cin >> dif;
       if(dif == 0) DEPTH = 4;
       else if(dif == 1) DEPTH = 6;
       else if(dif == 2) DEPTH = 8;
-      }
+    }
   }while(dif < 0 || dif > 2);
 
   cout << "Profundidad: " << DEPTH << endl;
