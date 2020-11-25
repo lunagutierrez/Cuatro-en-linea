@@ -6,7 +6,7 @@ int turn = 0;
 const int USER = 1;
 const int AI = 2;
 
-unsigned int DEPTH = 1;
+unsigned int DEPTH = 0;
 
 Linea4::Linea4(){//constructor del juego
   for(int f = 0; f < ROWS; f++){
@@ -435,9 +435,28 @@ bool Linea4::VerificarD(int player, int b[ROWS][COL]){
 void Linea4::playAI(){
   cout << "Juguemos 4 en linea!" << endl;
   turn = 0;
-  // cout << "Escoge el nivel de dificultad: " << endl;
-  // cin >> dif;
+  unsigned int dif = 0;
+
+  cout << "Ingrese el nivel de dificultad: Facil [0], Intermedio [1], Dificil [2]. " << endl;
+  cin >> dif;
+
+  do{
+    if(dif == 0) DEPTH = 4;
+    else if(dif == 1) DEPTH = 6;
+    else if(dif == 2) DEPTH = 8;
+    else{
+      cout << "ERROR: ingrese la dificultad correcta... 0,1,2: " << endl;
+      cin >> dif;
+      if(dif == 0) DEPTH = 4;
+      else if(dif == 1) DEPTH = 6;
+      else if(dif == 2) DEPTH = 8;
+      }
+  }while(dif < 0 || dif > 2);
+
+  cout << "Profundidad: " << DEPTH << endl;
+
   printBoard(board);
+  cout << endl;
 
   bool gameover = false;//inicializador del juego
   int player = USER; //jugador actual
@@ -457,7 +476,6 @@ void Linea4::playAI(){
       gameover = true;
       break;
     }
-
 
     c = 0;
     for(int i = 0; i < COL; i++){
