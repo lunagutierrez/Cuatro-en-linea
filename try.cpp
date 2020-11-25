@@ -280,7 +280,7 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta)
   int column_selected = SelectColumn(b);
 
 
-  if (d == 0){ // si llegue a la profundidad 0
+  if (d == 0||d >= CELLS - turn){ // si llegue a la profundidad 0
     // retorno el puntaje para esa situacion
     return vector<int>{column_selected, eval4(b, AI)};
   }
