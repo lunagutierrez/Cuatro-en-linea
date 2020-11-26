@@ -17,7 +17,6 @@ Linea4::Linea4(){//constructor del juego
 
 //JUEGO PARA UN JUGADOR
 //---------------------------------------------------------------------------
-
 void Linea4::playAI(){
   cout << "Juguemos 4 en linea!" << endl;
   turn = 0;
@@ -112,7 +111,6 @@ void Linea4::playAI(){
 //---------------------------------------------------------------------------
 //JUEGO PARA DOS JUGADORES
 //---------------------------------------------------------------------------
-
 void Linea4::play2players(){
   cout << "Juguemos 4 en linea!" << endl;
   turn = 0;
@@ -436,7 +434,7 @@ vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta)
 
   int column_selected = SelectColumn(b);
 
-  while (d >= COL*ROWS - turn)//es nodo terminal
+  while (d >= CELLS - turn)//es nodo terminal
     d--; //la profundidad analizada se va a reducir
 
   if (d == 0){ // si llegue a la profundidad 0
