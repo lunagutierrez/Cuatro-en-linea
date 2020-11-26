@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "try.hpp"
+#include "connect4.hpp"
 using namespace std;
 
 int main(){
