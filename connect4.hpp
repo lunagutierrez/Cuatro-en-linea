@@ -1,3 +1,5 @@
+/* Autores: Luna Gutierrez, Ana Garzón, Alejandra Campo.*/
+
 #ifndef _CONNECT4_HPP
 #define _CONNECT4_HPP
 

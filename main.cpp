@@ -1,5 +1,6 @@
-#include <iostream>
+/* Autores: Luna Gutierrez, Ana Garzón, Alejandra Campo.*/
 
+#include <iostream>
 #include "connect4.hpp"
 using namespace std;
 

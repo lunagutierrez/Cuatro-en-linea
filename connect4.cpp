@@ -1,3 +1,5 @@
+/* Autores: Luna Gutierrez, Ana Garzón, Alejandra Campo.*/
+
 #include <iostream>	 // consola de la libreria standard (STL)
 #include <climits>  /* Este encabezado define constantes con los límites de los tipos
  integrales fundamentales para el sistema específico y la implementación del compilador utilizada.*/
