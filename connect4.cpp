@@ -1,13 +1,14 @@
 #include <iostream>	 // consola de la libreria standard (STL)
-#include <climits>
+#include <climits>  /* Este encabezado define constantes con los límites de los tipos
+ integrales fundamentales para el sistema específico y la implementación del compilador utilizada.*/
 #include "connect4.hpp"
 
-const int USER = 1;
-const int AI = 2;
+const int USER = 1; // el usuario es el entero 1.
+const int AI = 2; // el computador es el entero 2.
 
-Linea4::Linea4(){//constructor del juego
-  DEPTH = 0;
-  turn = 0;
+Linea4::Linea4(){ //constructor del juego
+  DEPTH = 0; // inicializar profunidad
+  turn = 0; // inicializar turno
   for(int f = 0; f < ROWS; f++){
     for(int c = 0;c < COL; c++){
       board[f][c] = 0; // inicializar el tablero en ceros.
@@ -17,43 +18,46 @@ Linea4::Linea4(){//constructor del juego
 
 //JUEGO PARA UN JUGADOR
 //---------------------------------------------------------------------------
+
 void Linea4::playAI(){
   cout << "Juguemos 4 en linea!" << endl;
-  turn = 0;
-  unsigned int dif = 0;
+  turn = 0; // inicializar turno
+  unsigned int dif = 0; // inicializar dificultad (profundidad del árbol).
 
   cout << "Ingrese el nivel de dificultad: Facil [0], Intermedio [1], Dificil [2]. ";
   cin >> dif;
 
+/* Ajuste de dificultad solicitada de acuerdo a la profundidad */
   do{
     if(dif == 0){
-       DEPTH = 4;
+       DEPTH = 4; // Nivel fácil.
        break;
     }else if(dif == 1){
-      DEPTH = 6;
+      DEPTH = 6; // Nivel intermedio.
       break;
     }else if(dif == 2){
-       DEPTH = 8;
+       DEPTH = 8; // Nivel dificil.
        break;
-    }else{
+    }else{ // En caso de error de digitación o intención.
       cout << "ERROR: ingrese la dificultad correcta, 0,1,2: ";
       cin >> dif;
+      // Se realiza el ajuste de nuevo.
       if(dif == 0) DEPTH = 4;
       else if(dif == 1) DEPTH = 6;
       else if(dif == 2) DEPTH = 8;
     }
   }while(dif < 0 || dif > 2);
 
-  cout << "Profundidad: " << DEPTH << endl;
+  //cout << "Profundidad: " << DEPTH << endl; verificamos si está en la profunidad correcta.
 
-  printBoard(board);
+  printBoard(board); // comienza el juego imprimiendo el tablero vacio.
   cout << endl;
 
-  bool gameover = false;//inicializador del juego
-  int player = USER; //jugador actual
-  //int turn = 0; //count para los turnos
-  int c;
+  bool gameover = false; // inicializador del juego
+  int player = USER; // jugador actual
+  int c = 0;
 
+  /* Empezamos el juego mientras no haya terminado las jugadas */
   while (!gameover){
     if(player == USER){ // Mueve el usuario en el primer turno
       move(board, movUser(), 1);
@@ -63,25 +67,14 @@ void Linea4::playAI(){
       move(board, moveAI(), 2); //cambiar movuser por movAI cuando exista el algoritmo
       cout << "turno:" << turn;
     }
-    else if (turn == CELLS-1){ // Si llego al num max de turnos
+    else if (turn == CELLS-1){ // Si llego al número máximo de turnos.
       gameover = true;
       break;
     }
 
-    c = 0;
-    for(int i = 0; i < COL; i++){
-      if (isColumnFull(i,board)){
-          c++;
-      }
-    }
+    gameover = isWinner(player, board); //Revisa si el jugador ganó.
 
-    if(c == 7){
-      gameover = true;
-    }else{
-      gameover = isWinner(player, board); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
-    }
-
-    if(player == 1){
+    if(player == 1){ // Ajuste de cambio de jugadores.
       player = 2;
     }else{
       player = 1;
@@ -89,17 +82,16 @@ void Linea4::playAI(){
 
     turn +=1; //voy incrementando los turnos
 
-    //turn = turn%2;//si es par el turno le toca al usuario
     cout << endl;
 
-    printBoard(board); //imprimo el tablero tras cada mov
+    printBoard(board); //imprimo el tablero tras cada movimiento.
   }
 
-
+    // Si el estado es empate:
   if(!(isWinner(1, board) != 0 || isWinner(2, board) != 0)){
     cout << endl << "Empate" << endl;
 
-  }else{ // Si alguien gana
+  }else{ // Si hay ganador se imprime el mensaje de aviso.
 
     if (player == AI){
       cout << "Usuario gana(X)!"<<endl;
@@ -113,16 +105,15 @@ void Linea4::playAI(){
 //---------------------------------------------------------------------------
 void Linea4::play2players(){
   cout << "Juguemos 4 en linea!" << endl;
-  turn = 0;
-  // cout << "Escoge el nivel de dificultad: " << endl;
-  // cin >> dif;
-  printBoard(board);
+  turn = 0; // inicializar turno.
 
-  bool gameover = false;//inicializador del juego
-  int player = USER; //jugador actual
-  //int turn = 0; //count para los turnos
-  int c;
+  printBoard(board); //imprime el tablero vacio.
 
+  bool gameover = false; // inicializador del juego
+  int player = USER; // jugador actual
+  int c = 0;
+
+  /* Empezamos el juego mientras no haya terminado las jugadas */
   while (!gameover){
     if(player == USER){ // Mueve el usuario en el primer turno
       move(board, movUser(), 1);
@@ -133,20 +124,10 @@ void Linea4::play2players(){
       cout << "turno:" << turn;
     }
 
-    c = 0;
-    for(int i = 0; i < COL; i++){
-      if (isColumnFull(i,board)){
-        c++;
-      }
-    }
+    gameover = isWinner(player, board); //Revisa si el jugador ganó.
 
-    if(c == 7){
-      gameover = true;
-    }else{
-      gameover = isWinner(player, board); //Revisa si el jugador gano (esta seria tu funcion Alejandra)
-    }
 
-    if(player == 1){
+    if(player == 1){ // Ajuste de cambio de jugadores.
       player = 2;
     }else{
       player = 1;
@@ -154,17 +135,16 @@ void Linea4::play2players(){
 
     turn +=1; //voy incrementando los turnos
 
-    //turn = turn%2;//si es par el turno le toca al usuario
     cout << endl;
 
     printBoard(board); //imprimo el tablero tras cada mov
   }
 
-
+  // Si el estado es empate:
   if(!(isWinner(1, board) != 0 || isWinner(2, board) != 0)){
     cout << endl << "Empate" << endl;
 
-  }else{ // Si alguien gana
+  }else{ // Si hay algún ganador se imprime el mensaje de aviso.
     if (player == AI){
       cout << "Gana Usuario 1 (X)!"<<endl;
     }else if(player == USER){
@@ -175,7 +155,7 @@ void Linea4::play2players(){
 
 //==============================================================================
 // FUNCIONES PRIVADAS
-void Linea4::printBoard(int b[ROWS][COL]){
+void Linea4::printBoard(int b[ROWS][COL]){ // imprimir el tablero.
 
     cout << endl << ". . . . . . . ." << endl;
     for (int j = 0; j < ROWS; j++){
@@ -200,35 +180,35 @@ void Linea4::printBoard(int b[ROWS][COL]){
     }
     cout << "---------------" << endl;
     for (int i = 0; i < COL; i++){
-      cout << " " << i; //imprimo el numero de la casilla
+      cout << " " << i; // imprimo el numero de la casilla
     }
     cout << endl;
 }
 
-bool Linea4::isColumnFull(int column, int b[ROWS][COL]){
-  for(int fila = 0; fila < ROWS; fila++){//recorre cada fila
-      if(b[fila][column] == 0){ //si no hay nada en esa casilla
+bool Linea4::isColumnFull(int column, int b[ROWS][COL]){ // verifica si alguna columna está llena.
+  for(int fila = 0; fila < ROWS; fila++){ // recorre cada fila
+      if(b[fila][column] == 0){ // si no hay nada en esa casilla, la col aún no está llena.
         return false;
       }
     }
   return true; //retorna true cuando alguna columna está llena de fichas.
 }
 
-int Linea4::SelectColumn(int b[ROWS][COL]){
+int Linea4::SelectColumn(int b[ROWS][COL]){ // Selecciona al computador una columna aleatoria cuando el computador entre en un estado de pérdidas.
   vector<int> v;
-  for(int i = 0; i < COL; i++){
+  for(int i = 0; i < COL; i++){ // Se revisa el estado actual del tablero
     for(int j = 0; j < ROWS; j++){
-      if(b[j][i] == 0){
-        v.push_back(i);
+      if(b[j][i] == 0){ // En las casillas que estén disponibles...
+        v.push_back(i); // Se añade al vector
         break;
       }
     }
   }
-  int randomIndex = rand()% v.size();
-  return v[randomIndex];
+  int randomIndex = rand()% v.size(); // Teniendo en cuenta el tamaño, escojo aleatoriamente una posición.
+  return v[randomIndex]; // retorno la columna aleatoria.
 }
 
-void Linea4::move(int b[ROWS][COL],int col, int player){
+void Linea4::move(int b[ROWS][COL],int col, int player){ // movimiento disponible.
   // toma el tablero, la columna y el jugador
   for (int i = 0; i < ROWS; i++){
     if (b[i][col] == 0){ // Lo pone en la primera fila disponible
@@ -238,8 +218,8 @@ void Linea4::move(int b[ROWS][COL],int col, int player){
   }
 }
 
-int Linea4::movUser(){
-
+int Linea4::movUser(){ // movimiento del usuario de acuerdo a lo que ingrese.
+    // el usuario escoge su columna para jugar.
     cout << "Es tu turno..." << endl;
     int col;
 
@@ -252,7 +232,7 @@ int Linea4::movUser(){
         cin.ignore(INT_MAX, '\n'); //ignora el input que ha sido ingresado
         cout << "Ingrese un numero entre 0 y 6" << endl;
       }
-      else if (!(col >= 0 && col < COL)){
+      else if (!(col >= 0 && col < COL)){ // si ingresa una columna fuera de los límites del tablero.
         cout << "Esa no es una columna valida" << endl;
       }else if (isColumnFull(col, board)){ // En caso de que la columna ya este llena
         cout << "Esa columna ya esta llena" << endl;
@@ -264,23 +244,23 @@ int Linea4::movUser(){
     return col;//columna escogida por el usuario
   }
 
-int Linea4::moveAI(){
+int Linea4::moveAI(){ // movimiento del computador.
   int col;
   int winAI = Winner_next(AI, board);
   int winUSER = Winner_next(USER, board);
 
   if (winAI >= 0){
-    col = winAI;
+    col = winAI; // movimiento ganador.
   }else if(winUSER >= 0){
-    col = winUSER;
+    col = winUSER; // movimiento para bloquear usuario.
   }else
-    col = miniMax(board, DEPTH, AI, MIN, MAX)[0]; //retorna la columna
+    col = miniMax(board, DEPTH, AI, MIN, MAX)[0]; //retorna la columna de acuerdo al miniMax().
 
   cout << "Es mi turno, voy a poner en la columna: " << col << endl;
   return col;
 }
 
-int Linea4::heuristica(int s[4], int p){
+int Linea4::heuristica(int s[4], int p){ // función que orienta las acciones del computador.
 
   unsigned int blank = 0; // puntos neutros
   unsigned int bad = 0; // puntos a favor del oponente
@@ -326,7 +306,7 @@ int Linea4::eval4(int b[ROWS][COL], int p){ //toma el estado actual del tablero 
   int y;
   int i;
 
-	// vert (misma col)
+	// verticalmente (misma col)
 	for (x = 0; x < COL; x++){
 	 for (y = 0; y < ROWS; y++){
 		 col[y] = b[y][x];//arreglo que define la columna
@@ -339,7 +319,7 @@ int Linea4::eval4(int b[ROWS][COL], int p){ //toma el estado actual del tablero 
 	 }
 	}
 
-  //hor (misma fila)
+  //horizontalmente (misma fila)
 	for (y = 0; y < ROWS; y++){
 		for (x = 0; x < COL; x++){
 			row[x] = b[y][x];//arreglo que defina una fila
@@ -405,25 +385,24 @@ bool Linea4::isWinner(int player, int b[ROWS][COL]){
   }
 }
 
-int Linea4::Winner_next(int player, int b[ROWS][COL]){
+int Linea4::Winner_next(int player, int b[ROWS][COL]){ // función que revisa si puede haber un jugador puede ganar en la jugada siguiente, en un tablero determinado
 
   for(int j = 0; j < COL; j++){
-    if(!isColumnFull(j,b)){
+    if(!isColumnFull(j,b)){ // Si la columna no está llena
       for(int i = 0; i < ROWS; i++){
         if (b[i][j] == 0){ // Lo pone en la primera fila disponible
-          b[i][j] = player;
-          if(isWinner(player,b)){
-            //cout << "GANA " << player << " COLUMNA " << j << endl;
+          b[i][j] = player; //  poner una ficha de player en esa casilla
+          if(isWinner(player,b)){ // si gana player
             b[i][j] = 0;
-            return j;
+            return j; //retornar esa jugada.
           }
-          b[i][j] = 0;
+          b[i][j] = 0; //deshacer movimiento
           break;
         }
       }
     }
   }
-  return -1;
+  return -1; //Si player no puede ganar en la jugada siguiente, retornar - 1
 }
 
 vector<int> Linea4::miniMax(int b[ROWS][COL], int d, int p, int alpha, int beta){
