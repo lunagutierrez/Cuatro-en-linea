@@ -1,4 +1,4 @@
-# Cuatro en Línea
+# Juego Cuatro en Línea (AI)
 
 - Proyecto de Algoritmos y Estructuras de Datos 
 
