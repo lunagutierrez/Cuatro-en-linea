@@ -57,7 +57,6 @@ void Linea4::playAI(){
 
   bool gameover = false; // inicializador del juego
   int player = USER; // jugador actual
-  int c = 0;
 
   /* Empezamos el juego mientras no haya terminado las jugadas */
   while (!gameover){
@@ -113,7 +112,6 @@ void Linea4::play2players(){
 
   bool gameover = false; // inicializador del juego
   int player = USER; // jugador actual
-  int c = 0;
 
   /* Empezamos el juego mientras no haya terminado las jugadas */
   while (!gameover){
@@ -201,12 +199,12 @@ int Linea4::SelectColumn(int b[ROWS][COL]){ // Selecciona al computador una colu
   for(int i = 0; i < COL; i++){ // Se revisa el estado actual del tablero
     for(int j = 0; j < ROWS; j++){
       if(b[j][i] == 0){ // En las casillas que estén disponibles...
-        v.push_back(i); // Se añade al vector
+        v.push_back(i); // Se añade al vector los indices de las columnas.
         break;
       }
     }
   }
-  int randomIndex = rand()% v.size(); // Teniendo en cuenta el tamaño, escojo aleatoriamente una posición.
+  int randomIndex = rand()% v.size(); // Se escoge aleatoriamente un índice de columna disponible.
   return v[randomIndex]; // retorno la columna aleatoria.
 }
 
